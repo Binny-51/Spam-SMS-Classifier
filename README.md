@@ -39,5 +39,5 @@ It demonstrates **text preprocessing, feature engineering, model building, and d
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/your-username/sms-spam-classifier.git
+   git clone https://github.com/your-Binny-51/sms-spam-classifier.git
    cd sms-spam-classifier
