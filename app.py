@@ -5,55 +5,61 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
+# Download necessary NLTK packages
 nltk.download('punkt')
 nltk.download('stopwords')
 
+# Initialize the stemmer
 ps = PorterStemmer()
 
-# Function to preprocess the text
+# Preprocessing function
 def transform_text(text):
     text = text.lower()
     text = nltk.word_tokenize(text)
-
+    
     y = []
+    # Keep only alphanumeric tokens
     for i in text:
-        if i.isalnum():   # keep only words/numbers
+        if i.isalnum():
             y.append(i)
-
+    
     text = y[:]
     y.clear()
-
-    # remove stopwords and punctuation
+    
+    # Remove stopwords and punctuation
     for i in text:
         if i not in stopwords.words('english') and i not in string.punctuation:
             y.append(i)
-
+    
     text = y[:]
     y.clear()
-
-    # stemming
+    
+    # Apply stemming
     for i in text:
         y.append(ps.stem(i))
-
+    
     return " ".join(y)
 
-# Load fitted vectorizer and model
-tfidf = pickle.load(open('vectorizer.pkl','rb'))
-model = pickle.load(open('model.pkl','rb'))
+# Load trained vectorizer and model
+tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
 
-# Streamlit app UI
-tfidf = pickle.load(open('vectorizer.pkl','rb'))
-model = pickle.load(open('model.pkl','rb'))
-
+# Streamlit interface
 st.title("Email/SMS Spam Classifier")
 
 input_sms = st.text_area("Enter the message")
 
 if st.button('Predict'):
+    # 1. Preprocess
     transformed_sms = transform_text(input_sms)
+    
+    # 2. Vectorize
     vector_input = tfidf.transform([transformed_sms])
+    
+    # 3. Predict
     result = model.predict(vector_input)[0]
     
+    # 4. Display result
     if result == 1:
         st.header("Spam")
     else:
