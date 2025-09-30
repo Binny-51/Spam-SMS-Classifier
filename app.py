@@ -41,8 +41,14 @@ def transform_text(text):
     return " ".join(y)
 
 # Load trained vectorizer and model
-tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
-model = pickle.load(open('model.pkl', 'rb'))
+
+
+with open('vectorizer.pkl', 'rb') as f:
+    tfidf = pickle.load(f)
+
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
+
 
 # Streamlit interface
 st.title("Email/SMS Spam Classifier")
