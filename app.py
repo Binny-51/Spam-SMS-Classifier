@@ -4,21 +4,19 @@ import string
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
+from nltk.tokenize import RegexpTokenizer
 
-# Download necessary NLTK packages
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords')
-
-# Initialize the stemmer
+# Initialize the stemmer and tokenizer
 ps = PorterStemmer()
+tokenizer = RegexpTokenizer(r'\w+')
 
 # Preprocessing function
 def transform_text(text):
     text = text.lower()
-    text = nltk.word_tokenize(text)
+    text = tokenizer.tokenize(text)   # ✅ replaced word_tokenize with RegexpTokenizer
     
     y = []
-    # Keep only alphanumeric tokens
+    # Keep only alphanumeric tokens (RegexpTokenizer already does this, but kept for safety)
     for i in text:
         if i.isalnum():
             y.append(i)
@@ -41,14 +39,11 @@ def transform_text(text):
     return " ".join(y)
 
 # Load trained vectorizer and model
-
-
 with open('vectorizer.pkl', 'rb') as f:
     tfidf = pickle.load(f)
 
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
-
 
 # Streamlit interface
 st.title("Email/SMS Spam Classifier")
@@ -70,4 +65,3 @@ if st.button('Predict'):
         st.header("Spam")
     else:
         st.header("Not Spam")
-
