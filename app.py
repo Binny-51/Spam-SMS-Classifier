@@ -6,7 +6,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
 # Download necessary NLTK packages
-nltk.download('punkt')
+nltk.download('punkt', quiet=True)
 nltk.download('stopwords')
 
 # Initialize the stemmer
@@ -70,3 +70,4 @@ if st.button('Predict'):
         st.header("Spam")
     else:
         st.header("Not Spam")
+
