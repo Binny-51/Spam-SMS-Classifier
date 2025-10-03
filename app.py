@@ -6,6 +6,8 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import RegexpTokenizer
 
+nltk.download('stopwords', quiet=True)
+
 # Initialize the stemmer and tokenizer
 ps = PorterStemmer()
 tokenizer = RegexpTokenizer(r'\w+')
@@ -13,10 +15,10 @@ tokenizer = RegexpTokenizer(r'\w+')
 # Preprocessing function
 def transform_text(text):
     text = text.lower()
-    text = tokenizer.tokenize(text)   # ✅ replaced word_tokenize with RegexpTokenizer
+    text = tokenizer.tokenize(text)
     
     y = []
-    # Keep only alphanumeric tokens (RegexpTokenizer already does this, but kept for safety)
+    # Keep only alphanumeric tokens
     for i in text:
         if i.isalnum():
             y.append(i)
@@ -24,9 +26,10 @@ def transform_text(text):
     text = y[:]
     y.clear()
     
-    # Remove stopwords and punctuation
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))  # ✅ avoid repeated calls
     for i in text:
-        if i not in stopwords.words('english') and i not in string.punctuation:
+        if i not in stop_words:
             y.append(i)
     
     text = y[:]
@@ -51,18 +54,20 @@ st.title("Email/SMS Spam Classifier")
 input_sms = st.text_area("Enter the message")
 
 if st.button('Predict'):
-    # 1. Preprocess
-    transformed_sms = transform_text(input_sms)
-    
-    # 2. Vectorize
-    vector_input = tfidf.transform([transformed_sms])
-    
-    # 3. Predict
-    result = model.predict(vector_input)[0]
-    
-    # 4. Display result
-    if result == 1:
-        st.header("Spam")
+    if input_sms.strip() == "":
+        st.warning("Please enter a message to classify.")
     else:
-        st.header("Not Spam")
-
+        # 1. Preprocess
+        transformed_sms = transform_text(input_sms)
+        
+        # 2. Vectorize
+        vector_input = tfidf.transform([transformed_sms])
+        
+        # 3. Predict
+        result = model.predict(vector_input)[0]
+        
+        # 4. Display result
+        if result == 1:
+            st.header("Spam")
+        else:
+            st.header("Not Spam")
