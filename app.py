@@ -6,7 +6,21 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import RegexpTokenizer
 
-nltk.download('stopwords', quiet=True)
+
+nltk_resources = [
+    'stopwords',
+    'punkt',
+    'wordnet',
+    'omw-1.4',
+    'averaged_perceptron_tagger',
+    'vader_lexicon'
+]
+
+for resource in nltk_resources:
+    try:
+        nltk.data.find(f'corpora/{resource}')
+    except LookupError:
+        nltk.download(resource, quiet=True)
 
 # Initialize the stemmer and tokenizer
 ps = PorterStemmer()
@@ -27,7 +41,12 @@ def transform_text(text):
     y.clear()
     
     # Remove stopwords
-    stop_words = set(stopwords.words('english'))  # ✅ avoid repeated calls
+    try:
+        stop_words = set(stopwords.words('english'))
+    except LookupError:
+        nltk.download('stopwords', quiet=True)
+        stop_words = set(stopwords.words('english'))
+        
     for i in text:
         if i not in stop_words:
             y.append(i)
