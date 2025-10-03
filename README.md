@@ -2,7 +2,6 @@
 
 Live Demo: Streamlit App
 https://spam-sms-classifier-5ffvbyltk7m2vdlhwkdlbh.streamlit.app/
-
 📌 Overview
 
 This project is a Machine Learning mini-project that classifies SMS messages as either Spam or Ham (Not Spam).
